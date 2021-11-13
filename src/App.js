@@ -1,41 +1,66 @@
-import logo from './logo.svg';
-import React, {Component, useState, useEffect}from 'react'
 import './App.css';
+import React, { useState, useEffect } from 'react';
+import { interval, Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+
+import TimeUp from './Comp/Btn/TimeUp/TimeUp';
+import Btn from './Comp/Btn/Btn';
 
 
 function App() {
-    const [timer, setTimer] = useState(0)
-    const [start, setStart] = useState(false)
-    useEffect(() => {
-      let interval = null
-      if (start) {
-        interval = setInterval(()=>{
-          setTimer(prevenTimer => prevenTimer + 10)
-        }, 10)
-      }else {
-        clearInterval(interval)
-      }
-      return() => clearInterval(interval)
-    },[start])
-    return (
-        <div className="timeUp">
-          <div className="app">
-            <p>
-              Timer
-            </p>
-            <p>
-              <span className="timering_first">{("0" + Math.floor((timer/60000)%60)).slice(-2)}.</span>
-              <span className="timering_second">{("0" + Math.floor((timer/1000)%60)).slice(-2)}.</span>
-              <span className="timering_thr">{("0" + (timer/10)%1000).slice(-2)}</span>
 
-            </p>
-            <button className="butt_one" onClick={()=> setStart(true)}>START</button>
-            <button className="butt_two" onClick={()=> setStart(false)}>STOP</button>
-            <button className="butt_three" onClick={()=>{setTimer(0); setStart(false)}}>RESET</button>
-          </div>
+    const [time, setTime] = useState(0);
+    const [watchOn, setWatchOn] = useState(false);
+    const [status, setStatus] = useState(0);
+
+    useEffect(() => {
+
+        const unsubscribe = new Subject();
+        interval(10)
+            .pipe(takeUntil(unsubscribe))
+            .subscribe(() => {
+                if (watchOn) {
+                    setTime(val => val + 1);
+                }
+            });
+        return () => {
+            unsubscribe.next();
+            unsubscribe.complete();
+        };
+    }, [watchOn]);
+
+    const handleStart = () => {
+        setWatchOn(prevState => !prevState);
+        setStatus(1);
+    }
+    const handleResume = () => {
+        handleStart();
+    }
+    const handleStop = () => {
+        if (time !== 0) {
+            setWatchOn(false);
+        }
+        setStatus(2);
+    }
+    const handleReset = () => {
+        setTime(0);
+        setWatchOn(false);
+        setStatus(0);
+    }
+
+    return (
+        <div className="Timer">
+                    <div className='app-title'>Stopwatch</div>
+                    <div className='stopwatch'>
+                        <TimeUp
+                            time={time}/>
+                        <Btn
+                            start={handleStart}
+                            stop={handleStop}
+                            reset={handleReset}/>
+                    </div>
         </div>
     );
-
 }
 
 export default App;

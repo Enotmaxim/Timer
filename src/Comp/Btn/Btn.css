@@ -1,0 +1,15 @@
+.starting {
+    background-color: green;
+    color: white;
+    border: 5px solid black;
+}
+.stopping {
+    background-color: red;
+    color: white;
+    border: 5px solid black;
+}
+.resetting{
+    background-color: white;
+    color: black;
+    border: 5px solid black;
+}

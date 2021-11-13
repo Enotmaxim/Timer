@@ -1,25 +1,10 @@
-.timeUp {
-  text-align: center;
+.Timer {
+    text-align: center;
 }
-button {
-  width: 100px;
-  height: 100px;
-  margin-right: 10px;
-  border-radius: 20px;
-}
-.butt_one {
-  background-color: green;
-  color: white;
-  border: 5px solid black;
-}
-.butt_two {
-  background-color: red;
-  color: white;
-  border: 5px solid black;
-}
-.butt_three {
-  background-color: white;
-  color: black;
-  border: 5px solid black;
 
+button {
+    width: 100px;
+    height: 100px;
+    margin-right: 10px;
+    border-radius: 20px;
 }
